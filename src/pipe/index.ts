@@ -1,0 +1,1 @@
+export { ParseIntPipe } from 'pipe/parse-int/parse-int.pipe';

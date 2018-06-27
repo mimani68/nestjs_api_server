@@ -1,0 +1,47 @@
+import { Injectable } from '@nestjs/common';
+
+// import { InjectModel } from '@nestjs/mongoose';
+// import { Model } from 'mongoose';
+import * as jwt from 'jsonwebtoken';
+
+import { UserService } from 'services';
+import { UserInterface } from 'data/interface';
+
+@Injectable()
+export class AuthService {
+
+    private secretKey: string;
+
+    constructor(
+        private readonly userService: UserService,
+        // @InjectModel('User') private readonly userModel: Model<UserInterface>,
+    ) {
+        // this.secretKey = process.env.TOKEN_SECRET_KEY || 'ali@ba*j5%sdw';
+        this.secretKey = 'ali@ba*j5%sdw';
+    }
+
+    async createToken( user: UserInterface ) {
+        const userViewModel = {
+            id: user._id,
+            username: user.username,
+            password: user.password,
+            role: user.role,
+        };
+        const userLoged = await this.userService.findUserByQuery( userViewModel );
+        if ( userLoged ) {
+            const token = await jwt.sign(userLoged, this.secretKey , { expiresIn: 36000 });
+            return token;
+        } else {
+            return {
+                error: true,
+                message: 'چنین کاربری یافت نشد',
+            };
+        }
+    }
+
+    // async validateUser( token: string ) {
+    //     const decodedToken: any = await jwt.verify( token, this.secretKey );
+    //     // console.log(result);
+    //     return await this.userService.findUserById( decodedToken.id );
+    // }
+}
