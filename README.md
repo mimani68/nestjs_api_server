@@ -1,4 +1,6 @@
-# cms
+# Nest.js starter for api server
+
+![nest.js starter](/dev-docs/banner.png)
 
 ## Description
 
